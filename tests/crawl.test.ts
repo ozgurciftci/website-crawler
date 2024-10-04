@@ -1,4 +1,7 @@
-import {getURLsFromHTML, normalizeURL} from '../src/crawl';
+import {
+    getURLsFromHTML,
+    normalizeURL
+} from '../src/crawl.js';
 
 describe('crawl', () => {
     test('normalizeURL strip protocol', () => {

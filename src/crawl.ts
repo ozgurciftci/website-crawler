@@ -1,5 +1,7 @@
-import * as url from "node:url";
 import * as cheerio from 'cheerio';
+import pLimit from 'p-limit';
+
+const limit = pLimit(5);  // Limit concurrency to 5 simultaneous requests
 
 export const normalizeURL = (url: string) => {
     const urlObj = new URL(url);
@@ -45,9 +47,11 @@ export const getURLsFromHTML = (htmlBody: string, baseURL: string): string[] => 
 export const crawlPage = async (baseURL: string, currentURL: string, pages: any) => {
     const baseURLObject = new URL(baseURL);
     const currentURLObject = new URL(currentURL);
+    // Skip pages from different domains
     if (baseURLObject.hostname !== currentURLObject.hostname) {
         return pages;
     }
+    // Normalize URL and increase the number of usage if there is
     const normalizedCurrentURL = normalizeURL(currentURL);
     if (pages[normalizedCurrentURL] > 0) {
         pages[normalizedCurrentURL]++;
