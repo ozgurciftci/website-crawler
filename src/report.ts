@@ -12,11 +12,11 @@ export const sortPages = (pages: any) => {
     return pagesArray;
 }
 
-export const printReport = async (pages: any) => {
+export const printReport = async (pages: any, crawlTime?: number) => {
     console.log('==========');
     console.log('REPORT');
     console.log('==========');
-    const reportData = ['Report Date: ' + new Date().toISOString() + '\n'];
+    const reportData = ['Report Date: ' + new Date().toISOString() + ' --- Crawl time: ' +crawlTime+ '\n'];
     const sortedPages = sortPages(pages);
     for(let page of sortedPages) {
         const url = page[0];

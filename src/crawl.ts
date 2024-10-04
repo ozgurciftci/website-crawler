@@ -80,3 +80,61 @@ export const crawlPage = async (baseURL: string, currentURL: string, pages: any)
     }
     return pages;
 }
+
+export const crawlPageV2 = async (baseURL: string, pages: any) => {
+    const queue: Set<string> = new Set([baseURL]);
+    const visited: Set<string> = new Set();
+
+    while (queue.size > 0) {
+        const currentBatch = Array.from(queue).slice(0, 30);  // Process in batches of 10
+        currentBatch.forEach(url => queue.delete(url));
+
+        await Promise.all(currentBatch.map(async (currentURL) => {
+            if (visited.has(currentURL)) {
+                return;
+            }
+
+            const baseURLObject = new URL(baseURL);
+            const currentURLObject = new URL(currentURL);
+
+            // Skip pages from different domains
+            if (baseURLObject.hostname !== currentURLObject.hostname) {
+                return;
+            }
+
+            visited.add(currentURL);
+            // Normalize URL and increase the number of usage if there is
+            const normalizedCurrentURL = normalizeURL(currentURL);
+            if (pages[normalizedCurrentURL] > 0) {
+                pages[normalizedCurrentURL]++;
+                return;
+            }
+            pages[normalizedCurrentURL] = 1;
+            console.log(`actively crawling: ${currentURL}`);
+
+            try {
+                const response = await fetch(currentURL);
+                if (!response.ok) {
+                    console.log(`error occurred while fetching ${currentURL}, response: ${response.status}`);
+                    return;
+                }
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('text/html')) {
+                    console.log(`non-html response, content-type: ${contentType} on page ${currentURL}`);
+                    return;
+                }
+                const htmlBody = await response.text();
+                const nextURLs = getURLsFromHTML(htmlBody, baseURL);
+
+                nextURLs.forEach(nextURL => {
+                    if (!visited.has(nextURL)) {
+                        queue.add(nextURL);
+                    }
+                });
+            } catch (error: any) {
+                console.error(`error in fetch: ${error.message}, on page: ${currentURL}`);
+            }
+        }));
+    }
+    return pages;
+}

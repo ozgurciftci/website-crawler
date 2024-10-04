@@ -1,4 +1,4 @@
-import {crawlPage} from './crawl.js';
+import {crawlPage, crawlPageV2} from './crawl.js';
 import {printReport} from './report.js';
 
 const main = async () => {
@@ -13,8 +13,13 @@ const main = async () => {
     const baseURL = process.argv[process.argv.length - 1];
 
     console.log(`starting crawl of ${baseURL}`);
-    const pages = await crawlPage(baseURL, baseURL, {});
-    await printReport(pages);
+    const startTime = performance.now()
+    // const pages = await crawlPage(baseURL, baseURL, {});
+    const pages = await crawlPageV2(baseURL, {});
+    const endTime = performance.now();
+    const time = endTime - startTime;
+    console.log(`crawl of ${baseURL} completed in ${time}ms`);
+    await printReport(pages, time);
     process.exit(0);
 }
 (async () => await main())();
