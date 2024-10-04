@@ -1,4 +1,5 @@
-import fs from 'fs';
+import { promises as fs } from 'fs';
+const filePath = 'result.txt';
 
 export const sortPages = (pages: any) => {
     const pagesArray = Object.entries(pages);
@@ -15,7 +16,7 @@ export const printReport = async (pages: any) => {
     console.log('==========');
     console.log('REPORT');
     console.log('==========');
-    const reportData = [];
+    const reportData = ['Report Date: ' + new Date().toISOString() + '\n'];
     const sortedPages = sortPages(pages);
     for(let page of sortedPages) {
         const url = page[0];
@@ -28,10 +29,15 @@ export const printReport = async (pages: any) => {
     console.log('END REPORT');
     console.log('==========');
     // write to a text file
-    await writeFile(reportData);
+    await appendToFile(reportData);
 }
 
-const writeFile = async (content: any)=>{
-    console.log(content.toString());
-    fs.writeFileSync('./result.txt', content.toString());
+// appending the result as a report.txt to the file
+const appendToFile = async (content: any)=>{
+    try {
+        await fs.appendFile(filePath, content.toString());
+        console.log('Data successfully appended to file');
+    } catch (err) {
+        console.error('Error appending to file:', err);
+    }
 }

@@ -48,3 +48,6 @@ yarn.lock
 /workspace.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+
+# report
+result.txt
