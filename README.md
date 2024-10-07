@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Website Crawler** is a command-line tool built with Node.js and TypeScript that recursively crawls web pages starting from a given base URL. It parses HTML pages, extracts and normalizes URLs, and handles both absolute and relative links. The project uses Cheerio for HTML parsing and supports customizable crawling options.
+**Website Crawler** is a command-line tool built with Node.js and TypeScript that recursively crawls static web pages starting from a given base URL. It parses HTML pages, extracts and normalizes URLs, and handles both absolute and relative links. The project uses Cheerio for HTML parsing and supports customizable crawling options.
 
 This project is licensed under the **GNU License**, so anyone is welcome to use, inspect, and contribute to the code. The tool will be updated frequently with improvements and new features.
 
