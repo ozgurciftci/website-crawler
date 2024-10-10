@@ -16,12 +16,12 @@ export const printReport = async (pages: any, crawlTime?: number) => {
     console.log('==========');
     console.log('REPORT');
     console.log('==========');
-    const reportData = ['Report Date: ' + new Date().toISOString() + ' --- Crawl time: ' +crawlTime+ '\n'];
+    const reportData = ['Report Date: ' + new Date().toISOString() + ' --- Crawl time: ' +crawlTime + 'ms'];
     const sortedPages = sortPages(pages);
     for(let page of sortedPages) {
         const url = page[0];
         const hits = page[1];
-        const message = `found ${hits} links to page ${url}\n`;
+        const message = `found ${hits} links to page ${url}`;
         reportData.push(message);
         console.log(message);
     }
@@ -35,7 +35,7 @@ export const printReport = async (pages: any, crawlTime?: number) => {
 // appending the result as a report.txt to the file
 const appendToFile = async (content: any)=>{
     try {
-        await fs.appendFile(filePath, content.toString());
+        await fs.appendFile(filePath, content.join('\r\n'));
         console.log('Data successfully appended to file');
     } catch (err) {
         console.error('Error appending to file:', err);
